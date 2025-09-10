@@ -15,28 +15,101 @@ const COLORS = {
 
 // Mock data for Aikido Security
 const monthlyData = {
-  totalIssues: 247,
-  openIssues: 89,
-  closedIssues: 158,
-  newThisMonth: 67,
-  resolvedThisMonth: 92,
-  criticalIssues: 12,
-  highIssues: 23,
-  mediumIssues: 45,
-  lowIssues: 9
+  totalIssues: 69, // 39 nuevos + 2 falsos positivos + 28 manejados
+  openIssues: 39, // total de nuevos
+  closedIssues: 28, // total de manejados
+  newThisMonth: 39,
+  resolvedThisMonth: 28,
+  criticalIssues: 8, // estimación basada en SAST principalmente
+  highIssues: 15,
+  mediumIssues: 20,
+  lowIssues: 26
 };
 
 const issuesByType = [
-  { name: 'Vulnerabilidades de Código', value: 89, color: COLORS.destructive },
-  { name: 'Problemas de Dependencias', value: 67, color: COLORS.warning },
-  { name: 'Configuración de Seguridad', value: 45, color: COLORS.primary },
-  { name: 'Secrets Expuestos', value: 32, color: COLORS.accent },
-  { name: 'Compliance', value: 14, color: COLORS.muted }
+  { 
+    name: 'Open-source Dependencies', 
+    nuevos: 1, 
+    falsos_positivos: 0, 
+    manejados: 1 
+  },
+  { 
+    name: 'Container Images', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Cloud Configurations', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Virtual Machines', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Secrets in source code history', 
+    nuevos: 3, 
+    falsos_positivos: 0, 
+    manejados: 1 
+  },
+  { 
+    name: 'DAST/Surface Monitoring', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'SAST/Static App Security Testing', 
+    nuevos: 35, 
+    falsos_positivos: 2, 
+    manejados: 26 
+  },
+  { 
+    name: 'Infrastructure As Code', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Mobile', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'End-of-life Runtimes', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Access Controls', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Licenses', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  },
+  { 
+    name: 'Malware Issues', 
+    nuevos: 0, 
+    falsos_positivos: 0, 
+    manejados: 0 
+  }
 ];
 
 const issueStatusData = [
-  { name: 'Abiertas', value: 89, percentage: 36 },
-  { name: 'Cerradas', value: 158, percentage: 64 }
+  { name: 'Abiertas', value: 39, percentage: 57 },
+  { name: 'Cerradas', value: 28, percentage: 41 }
 ];
 
 const MetricCard = ({ 
@@ -106,10 +179,12 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-card border border-border rounded-lg p-3 shadow-elevated">
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        <p className="text-sm text-primary font-semibold">
-          {payload[0].value} issues ({((payload[0].value / monthlyData.totalIssues) * 100).toFixed(1)}%)
-        </p>
+        <p className="text-sm font-medium text-foreground mb-2">{label}</p>
+        {payload.map((entry: any, index: number) => (
+          <p key={index} className="text-sm font-medium" style={{ color: entry.color }}>
+            {entry.name}: {entry.value}
+          </p>
+        ))}
       </div>
     );
   }
@@ -173,51 +248,81 @@ export const Dashboard = () => {
         </div>
 
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* Issue Status Pie Chart */}
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">Estado de Issues del Mes</CardTitle>
-              <CardDescription>Distribución de issues abiertas vs cerradas</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={issueStatusData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={120}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    <Cell fill={COLORS.destructive} />
-                    <Cell fill={COLORS.success} />
-                  </Pie>
-                  <Tooltip 
-                    formatter={(value: any, name: any) => [`${value} issues (${issueStatusData.find(d => d.name === name)?.percentage}%)`, name]}
-                  />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold">Estado de Issues del Mes</CardTitle>
+                <CardDescription>Distribución de issues abiertas vs cerradas</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={issueStatusData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={120}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      <Cell fill={COLORS.destructive} />
+                      <Cell fill={COLORS.success} />
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: any, name: any) => [`${value} issues (${issueStatusData.find(d => d.name === name)?.percentage}%)`, name]}
+                    />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
 
-          {/* Issues by Type Bar Chart */}
+          {/* Issues by Type Bar Chart - Full Width */}
           <Card className="shadow-card">
             <CardHeader>
-              <CardTitle className="text-xl font-semibold">Issues por Tipo</CardTitle>
-              <CardDescription>Distribución de vulnerabilidades detectadas</CardDescription>
+              <CardTitle className="text-xl font-semibold">Issues por Tipo de Seguridad</CardTitle>
+              <CardDescription>Distribución detallada de vulnerabilidades por categoría</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={issuesByType} layout="horizontal">
+              <ResponsiveContainer width="100%" height={600}>
+                <BarChart 
+                  data={issuesByType} 
+                  margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis type="number" />
-                  <YAxis type="category" dataKey="name" width={160} />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={-45}
+                    textAnchor="end"
+                    height={100}
+                    interval={0}
+                    fontSize={12}
+                  />
+                  <YAxis />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" fill={COLORS.primary} radius={[0, 4, 4, 0]} />
+                  <Legend />
+                  <Bar 
+                    dataKey="nuevos" 
+                    name="Nuevos" 
+                    fill={COLORS.destructive} 
+                    radius={[2, 2, 0, 0]} 
+                  />
+                  <Bar 
+                    dataKey="falsos_positivos" 
+                    name="Falsos Positivos" 
+                    fill={COLORS.warning} 
+                    radius={[2, 2, 0, 0]} 
+                  />
+                  <Bar 
+                    dataKey="manejados" 
+                    name="Manejados" 
+                    fill={COLORS.success} 
+                    radius={[2, 2, 0, 0]} 
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

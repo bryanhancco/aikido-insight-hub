@@ -26,64 +26,35 @@ interface Collaborator {
 const collaborators: Collaborator[] = [
   {
     id: 1,
-    name: "María González",
-    email: "maria.gonzalez@company.com",
-    commits: 145,
-    issuesReported: 23,
-    department: "Frontend",
-    joinDate: "2023-01-15",
-    severity: { critical: 5, high: 8, medium: 7, low: 3 }
+    name: "Rusbel Ruelas",
+    email: "consultor.externo.dev1@DEVSTREAM.TECH",
+    commits: 87,
+    issuesReported: 4,
+    department: "Backend",
+    joinDate: "2025-03-15",
+    severity: { critical: 1, high: 1, medium: 2, low: 0 }
   },
   {
     id: 2,
-    name: "Carlos Rodriguez",
-    email: "carlos.rodriguez@company.com", 
-    commits: 167,
-    issuesReported: 19,
+    name: "Sergio Yhoel Soncco Cahui",
+    email: "sergiosonccoc@gmail.com",
+    commits: 10,
+    issuesReported: 2,
     department: "Backend",
-    joinDate: "2022-08-20",
-    severity: { critical: 3, high: 6, medium: 8, low: 2 }
+    joinDate: "2025-07-21",
+    severity: { critical: 0, high: 0, medium: 1, low: 1 }
   },
   {
-    id: 3,
-    name: "Ana Martínez",
-    email: "ana.martinez@company.com",
-    commits: 98,
-    issuesReported: 15,
-    department: "DevOps",
-    joinDate: "2023-03-10",
-    severity: { critical: 2, high: 4, medium: 7, low: 2 }
-  },
-  {
-    id: 4,
-    name: "Luis Chen",
-    email: "luis.chen@company.com",
-    commits: 89,
-    issuesReported: 12,
-    department: "Mobile",
-    joinDate: "2023-06-01",
-    severity: { critical: 1, high: 3, medium: 6, low: 2 }
-  },
-  {
-    id: 5,
-    name: "Sandra López",
-    email: "sandra.lopez@company.com",
-    commits: 124,
-    issuesReported: 18,
-    department: "QA",
-    joinDate: "2022-11-15",
-    severity: { critical: 4, high: 5, medium: 6, low: 3 }
-  },
-  {
-    id: 6,
-    name: "Roberto Silva",
-    email: "roberto.silva@company.com",
-    commits: 76,
-    issuesReported: 8,
+    id: 2,
+    name: "Bryan Hancco",
+    email: "bhanccoco@unsa.edu.pe",
+    commits: 3,
+    issuesReported: 1,
     department: "Backend",
-    joinDate: "2023-09-05",
-    severity: { critical: 1, high: 2, medium: 4, low: 1 }
-  }
+    joinDate: "2025-05-29",
+    severity: { critical: 0, high: 1, medium: 0, low: 0 }
+  },
+  
 ];
 
 type SortField = 'name' | 'commits' | 'issuesReported' | 'department';
