@@ -200,7 +200,7 @@ export const Dashboard = () => {
           <div>
             <h1 className="text-4xl font-bold text-foreground flex items-center gap-3">
               <Shield className="h-8 w-8 text-primary" />
-              Dashboard Aikido Security
+              DaaS Security Dashboard
             </h1>
             <p className="text-lg text-muted-foreground mt-2">
               Reporte Ejecutivo - Octubre 2024
